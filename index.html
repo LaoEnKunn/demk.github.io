@@ -1,0 +1,691 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+	<link rel="stylesheet" href="layui.css" media="all" >
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+	<script src="https://webapi.amap.com/maps?v=1.4.15&key=dd65aa48488f8e6af1fd32532c6438d5&plugin=Map3D,AMap.DistrictLayer,AMap.DistrictSearch,AMap.Scale,AMap.ToolBar"></script>
+	<script src="//webapi.amap.com/loca?v=1.3.2&key=dd65aa48488f8e6af1fd32532c6438d5"></script>
+
+	<script src="https://cache.amap.com/lbs/static/es5.min.js"></script>
+	<script type="text/ecmascript" src='pie.js'></script>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 97.1%;
+            margin: 0;
+        }
+		#echartBox { width: 450px;height: 440px; }
+		#echartBox2 {width: 450px;height: 440px;}  #echartBox3{width: 450px;height: 440px;}
+		#echartBox4 {width: 450px;height: 440px;}  #echartBox5{width: 450px;height: 440px;}
+		#echartBox6 {width: 450px;height: 440px;}  #echartBox7{width: 450px;height: 440px;}
+		#echartBox8 {width: 450px;height: 440px;}  #echartBox9{width: 450px;height: 440px;}
+		#echartBox10{width: 450px;height: 440px;} #echartBox11{width: 450px;height: 440px;}
+		#echartBox12{width: 450px;height: 440px;} #echartBox13{width: 450px;height: 440px;}
+		#echartBox14{width: 450px;height: 440px;} #echartBox15{width: 450px;height: 440px;}
+		#echartBox16{width: 450px;height: 440px;}
+    </style>
+    <title>毕设</title>
+</head>
+<body>
+<ul class="layui-nav layui-bg-zdy1">
+  <li class="layui-nav-item layui-bg-zdy3" layui-unselect>
+    <a class="layui-font-black" href="javascript:;">图层管理</a>
+    <dl class="layui-nav-child">
+      <dd><a class="layui-bg-zdy2" onclick="addbj()" ondblclick="disProvince.hide()" href="javascript:;"><center>显示山东省边界</center></a></dd>
+
+	  <div id="map-features">
+	  	<dd><a><div class="input-item">
+	  	  <input type='checkbox' name='mapStyle' value='bg' checked>
+	  	  <span class="input-text">区域面</span>
+	  	</div></a></dd>
+		<dd><a><div class="input-item">
+		  <input type='checkbox' name='mapStyle' value='road' checked>
+		  <span class="input-text">道路</span>
+		</div></a></dd>
+		<dd><a><div class="input-item">
+		  <input type='checkbox' name='mapStyle' value='building' checked>
+		  <span class="input-text">建筑物</span>
+		</div></a></dd>
+		<dd><a><div class="input-item">
+		  <input type='checkbox' name='mapStyle' value='point' checked>
+		  <span class="input-text">标注</span>
+		</div></a></dd>
+	  </div>
+	  
+    </dl>
+  </li>
+  
+  <li class="layui-nav-item layui-bg-zdy2" layui-unselect>
+    <a class="layui-font-black" href="javascript:;">便利性分析</a>
+    <dl class="layui-nav-child">
+		<dd><a>国际机场<input id="c1" type="checkbox" onclick="chose(this)" name="mm" value="24.85676196" /></a></dd>
+		<dd><a>国内航线<input id="c2" type="checkbox" onclick="chose(this)" name="mm" value="35.38354632" checked/></a></dd>
+		<dd><a>火车线路<input id="c3" type="checkbox" onclick="chose(this)" name="mm" value="215.7777385" /></a></dd>
+		<dd><a>地铁线路<input id="c4" type="checkbox" onclick="chose(this)" name="mm" value="52.2408347" checked/></a></dd>
+		<dd><a>城市公交线路<input id="c5" type="checkbox" onclick="chose(this)" name="mm" value="138.5219005" /></a></dd>
+		<dd><a>运营公交车<input id="c6" type="checkbox" onclick="chose(this)" name="mm" value="84.01955652" checked/></a></dd>
+		<dd><a>运营线路总长<input id="c7" type="checkbox" onclick="chose(this)" name="mm" value="138.5219005" /></a></dd>
+		<dd><a>出租车<input id="c8" type="checkbox" onclick="chose(this)" name="mm" value="222.7864221" checked/></a></dd>
+		<dd><a>客运总量<input id="c9" type="checkbox" onclick="chose(this)" name="mm" value="87.89133889"  /></a></dd>
+		<dd><a>全选<input type="checkbox" onclick="allCheck(this)" name="all"/></a></dd>
+  	  <dd><a class="layui-bg-zdy3" onclick="tj()"  href="javascript:;"><center>添加热力图</center></a></dd>
+	  <dd><a class="layui-bg-zdy3" onclick="yc()"  href="javascript:;"><center>移除热力图</center></a></dd>
+  	  <!-- <dd><a class="layui-bg-zdy5" onclick="tj1()"  href="javascript:;"><center>添加等值线图</center></a></dd>
+	  <dd><a class="layui-bg-zdy5" onclick="yc1()"  href="javascript:;"><center>移除等值线图</center></a></dd> -->
+    </dl>
+  </li>
+  
+  <li class="layui-nav-item layui-bg-zdy3" layui-unselect>
+    <a class="layui-font-black" href="javascript:;">各市饼状图</a>
+    <dl class="layui-nav-child">
+  		<dd><a class="layui-bg-zdy11" onclick="infoWindow.open(map,[116.98509,36.67102]);"  href="javascript:;"><center>济南市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow2.open(map, [120.30858,36.06324]);"  href="javascript:;"><center>青岛市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow3.open(map, [118.0509,36.7883]);"  href="javascript:;"><center>淄博市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow4.open(map, [117.30013,34.78187]);"  href="javascript:;"><center>枣庄市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow5.open(map, [118.46644,37.45472]);"  href="javascript:;"><center>东营市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow6.open(map, [121.37818,37.54678]);"  href="javascript:;"><center>烟台市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow7.open(map, [119.09244,36.69661]);"  href="javascript:;"><center>潍坊市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow8.open(map, [116.59592,35.39295]);"  href="javascript:;"><center>济宁市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow9.open(map, [117.10471,36.18694]);"  href="javascript:;"><center>泰安市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow10.open(map, [122.13864,37.42598]);"  href="javascript:;"><center>威海市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow11.open(map, [119.52705,35.40384]);"  href="javascript:;"><center>日照市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow12.open(map, [118.33833,35.03686]);"  href="javascript:;"><center>临沂市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow13.open(map, [116.28266,37.44868]);"  href="javascript:;"><center>德州市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow14.open(map, [115.93788,36.45717]);"  href="javascript:;"><center>聊城市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow15.open(map, [118.01215,37.45316]);"  href="javascript:;"><center>滨州市</center></a></dd>
+		<dd><a class="layui-bg-zdy11" onclick="infoWindow16.open(map, [115.50135,35.23101]);"  href="javascript:;"><center>菏泽市</center></a></dd>
+    </dl>
+  </li>
+  
+  <li class="layui-nav-item">
+	  <a class="layui-font-black" href="javascript:;">地图样式</a>
+	  <dl class="layui-nav-child">
+	    <dd><a class="layui-bg-zdy1" onclick="map.setMapStyle('amap://styles/normal');"  href="javascript:;"><center>标准</center></a></dd>
+		<dd><a class="layui-bg-zdy2" onclick="map.setMapStyle('amap://styles/dark');"  href="javascript:;"><center>幻影黑</center></a></dd>
+		<dd><a class="layui-bg-zdy3" onclick="map.setMapStyle('amap://styles/light');"  href="javascript:;"><center>月光银</center></a></dd>
+		<dd><a class="layui-bg-zdy4" onclick="map.setMapStyle('amap://styles/whitesmoke');"  href="javascript:;"><center>远山黛</center></a></dd>
+		<dd><a class="layui-bg-zdy5" onclick="map.setMapStyle('amap://styles/fresh');"  href="javascript:;"><center>草色青</center></a></dd>
+		<dd><a class="layui-bg-zdy6" onclick="map.setMapStyle('amap://styles/grey');"  href="javascript:;"><center>雅士灰</center></a></dd>
+		<dd><a class="layui-bg-zdy7" onclick="map.setMapStyle('amap://styles/graffiti');"  href="javascript:;"><center>涂鸦</center></a></dd>
+		<dd><a class="layui-bg-zdy8" onclick="map.setMapStyle('amap://styles/macaron');"  href="javascript:;"><center>马卡龙</center></a></dd>
+		<dd><a class="layui-bg-zdy9" onclick="map.setMapStyle('amap://styles/blue');"  href="javascript:;"><center>靛青蓝</center></a></dd>
+		<dd><a class="layui-bg-zdy3" onclick="map.setMapStyle('amap://styles/darkblue');"  href="javascript:;"><center>极夜黑</center></a></dd>
+		<dd><a class="layui-bg-zdy5" onclick="map.setMapStyle('amap://styles/wine');"  href="javascript:;"><center>酱籽</center></a></dd>
+		<dd><a class="layui-bg-zdy7" onclick="AMap.plugin(['AMap.MapType',], function(){var type=new AMap.MapType();map.addControl(type);});" href="javascript:;"><center>切换地图类型</center></a></dd>
+	  </dl>
+  </li>
+  
+  <li class="layui-nav-item layui-bg-zdy3">
+	  <a class="layui-font-black" href="javascript:;">交通指标数据</a>
+	  <dl class="layui-nav-child">
+		  <dd>
+			<div class="layui-panel">
+				<div style="height:620px;width:1100px;">
+					<div class="layui-form">
+					  <table class="layui-table">
+					  	<colgroup>
+					  		<col width="76">
+					  	</colgroup>
+					  	<thead>
+					  		<tr>
+					  			<th></th>
+					  			<th><center>国际机场/个</center></th>
+					  			<th><center>国内航线/条</center></th>
+					  			<th><center>火车线路/条</center></th>
+					  			<th><center>地铁线路/条</center></th>
+					  			<th><center>城市公交线路/条</center></th>
+					  			<th><center>运营公交车/部</center></th>
+					  			<th><center>运营线路总长/公里</center></th>
+					  			<th><center>出租车/部</center></th>
+					  			<th><center>客运总量/万人次</center></th>
+								<th><center>人口/万人</center></th>
+					  		</tr>
+					  	</thead>
+					  	<tbody>
+					  		<tr>
+					  			<td><center>济南市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>140</center></td>
+					  			<td><center>54</center></td>
+					  			<td><center>3</center></td>
+					  			<td><center>340</center></td>
+					  			<td><center>8076</center></td>
+					  			<td><center>115502</center></td>
+					  			<td><center>11019</center></td>
+					  			<td><center>84573</center></td>
+								<th><center>869.72</center></th>
+					  		</tr>
+					  		<tr>
+					  			<td><center>青岛市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>203</center></td>
+					  			<td><center>28</center></td>
+					  			<td><center>4</center></td>
+					  			<td><center>539</center></td>
+					  			<td><center>10965</center></td>
+					  			<td><center>23264</center></td>
+					  			<td><center>11981</center></td>
+					  			<td><center>116658</center></td>
+								<td><center>929.05</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>淄博市</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>20</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>70</center></td>
+					  			<td><center>2863</center></td>
+					  			<td><center>6959</center></td>
+					  			<td><center>6110</center></td>
+					  			<td><center>13812</center></td>
+								<td><center>470.84</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>枣庄市</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>8</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>40</center></td>
+					  			<td><center>2856</center></td>
+					  			<td><center>6732</center></td>
+					  			<td><center>1540</center></td>
+					  			<td><center>15714</center></td>
+								<td><center>392.03</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>东营市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>11</center></td>
+					  			<td><center>20</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>78</center></td>
+					  			<td><center>1163</center></td>
+					  			<td><center>3758</center></td>
+					  			<td><center>3105</center></td>
+					  			<td><center>6107</center></td>
+								<td><center>215.46</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>烟台市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>149</center></td>
+					  			<td><center>13</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>108</center></td>
+					  			<td><center>4330</center></td>
+					  			<td><center>11086</center></td>
+					  			<td><center>5413</center></td>
+					  			<td><center>43533</center></td>
+								<td><center>708.94</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>潍坊市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>10</center></td>
+					  			<td><center>12</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>110</center></td>
+					  			<td><center>4446</center></td>
+					  			<td><center>10439</center></td>
+					  			<td><center>4363</center></td>
+					  			<td><center>22783</center></td>
+								<td><center>936.3</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>济宁市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>10</center></td>
+					  			<td><center>6</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>61</center></td>
+					  			<td><center>4240</center></td>
+					  			<td><center>7371</center></td>
+					  			<td><center>3136</center></td>
+					  			<td><center>15717</center></td>
+								<td><center>837.59</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>泰安市</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>6</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>63</center></td>
+					  			<td><center>3526</center></td>
+					  			<td><center>7526</center></td>
+					  			<td><center>1952</center></td>
+					  			<td><center>11894</center></td>
+								<td><center>564.51</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>威海市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>28</center></td>
+					  			<td><center>10</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>54</center></td>
+					  			<td><center>2275</center></td>
+					  			<td><center>9800</center></td>
+					  			<td><center>2488</center></td>
+					  			<td><center>22246</center></td>
+								<td><center>282.56</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>日照市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>15</center></td>
+					  			<td><center>26</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>41</center></td>
+					  			<td><center>2866</center></td>
+					  			<td><center>12355</center></td>
+					  			<td><center>1068</center></td>
+					  			<td><center>17624</center></td>
+								<td><center>291.65</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>临沂市</center></td>
+					  			<td><center>1</center></td>
+					  			<td><center>41</center></td>
+					  			<td><center>15</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>90</center></td>
+					  			<td><center>2469</center></td>
+					  			<td><center>3076</center></td>
+					  			<td><center>2763</center></td>
+					  			<td><center>9506</center></td>
+								<td><center>1056.34</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>德州市</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>32</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>36</center></td>
+					  			<td><center>1165</center></td>
+					  			<td><center>2515</center></td>
+					  			<td><center>4386</center></td>
+					  			<td><center>3703</center></td>
+								<td><center>579.58</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>聊城市</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>11</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>37</center></td>
+					  			<td><center>1797</center></td>
+					  			<td><center>3128</center></td>
+					  			<td><center>2027</center></td>
+					  			<td><center>5486</center></td>
+								<td><center>606.43</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>滨州市</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>21</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>41</center></td>
+					  			<td><center>1607</center></td>
+					  			<td><center>6017</center></td>
+					  			<td><center>1236</center></td>
+					  			<td><center>7125</center></td>
+								<td><center>391.23</center></td>
+					  		</tr>
+					  		<tr>
+					  			<td><center>菏泽市</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>19</center></td>
+					  			<td><center>0</center></td>
+					  			<td><center>42</center></td>
+					  			<td><center>2013</center></td>
+					  			<td><center>4362</center></td>
+					  			<td><center>1668</center></td>
+					  			<td><center>7373</center></td>
+								<td><center>873.6</center></td>
+					  		</tr>
+							<tr>
+								<td><center>总和</center></td>
+								<td><center>9</center></td>
+								<td><center>607</center></td>
+								<td><center>301</center></td>
+								<td><center>7</center></td>
+								<td><center>1750</center></td>
+								<td><center>56657</center></td>
+								<td><center>233890</center></td>
+								<td><center>64255</center></td>
+								<td><center>403854</center></td>
+								<td><center>10005.83</center></td>
+							</tr>
+					  	</tbody>
+					  </table>
+					</div>
+				</div>
+			</div>
+		  </dd>
+	  </dl>
+  </li>
+  
+  <li class="layui-nav-item layui-bg-zdy2" layui-unselect>
+    <a class="layui-font-black" href="javascript:;">交通资源散点图</a>
+    <dl class="layui-nav-child">
+  	  <dd><a class="layui-bg-zdy2" ondblclick="map.remove([cc1,cc2,cc3,cc4,cc5,cc6,cc7,cc8,cc9,cc10,cc11,cc12,cc13,cc14,cc15,cc16])" onclick="map.add([cc1,cc2,cc3,cc4,cc5,cc6,cc7,cc8,cc9,cc10,cc11,cc12,cc13,cc14,cc15,cc16])"  href="javascript:;"><center>公交车数量散点图</center></a></dd>
+  	  <dd><a class="layui-bg-zdy2" ondblclick="map.remove([cc18,cc19,cc20,cc21,cc22,cc23,cc24,cc25,cc26,cc27,cc28,cc29,cc30,cc31,cc32,cc33])" onclick="map.add([cc18,cc19,cc20,cc21,cc22,cc23,cc24,cc25,cc26,cc27,cc28,cc29,cc30,cc31,cc32,cc33])"  href="javascript:;"><center>国内航线数散点图</center></a></dd>
+	  <dd><a class="layui-bg-zdy2" ondblclick="map.remove([cc34,cc35,cc36,cc37,cc38,cc39,cc40,cc41,cc42,cc43,cc44,cc45,cc46,cc47,cc48,cc49])" onclick="map.add([cc34,cc35,cc36,cc37,cc38,cc39,cc40,cc41,cc42,cc43,cc44,cc45,cc46,cc47,cc48,cc49])"  href="javascript:;"><center>火车线路散点图</center></a></dd>
+	  <dd><a class="layui-bg-zdy2" ondblclick="map.remove([cc50,cc51,cc52,cc53,cc54,cc55,cc56,cc57,cc58,cc59,cc60,cc61,cc62,cc63,cc64,cc65])" onclick="map.add([cc50,cc51,cc52,cc53,cc54,cc55,cc56,cc57,cc58,cc59,cc60,cc61,cc62,cc63,cc64,cc65])"  href="javascript:;"><center>公交线路散点图</center></a></dd>
+	  <dd><a class="layui-bg-zdy2" ondblclick="map.remove([cc66,cc67,cc68,cc69,cc70,cc71,cc72,cc73,cc74,cc75,cc76,cc77,cc78,cc79,cc80,cc81])" onclick="map.add([cc66,cc67,cc68,cc69,cc70,cc71,cc72,cc73,cc74,cc75,cc76,cc77,cc78,cc79,cc80,cc81])"  href="javascript:;"><center>运营线路总长散点图</center></a></dd>
+	  <dd><a class="layui-bg-zdy2" ondblclick="map.remove([cc82,cc83,cc84,cc85,cc86,cc87,cc88,cc89,cc90,cc91,cc92,cc93,cc94,cc95,cc96,cc97])" onclick="map.add([cc82,cc83,cc84,cc85,cc86,cc87,cc88,cc89,cc90,cc91,cc92,cc93,cc94,cc95,cc96,cc97])"  href="javascript:;"><center>出租车散点图</center></a></dd>
+	  <dd><a class="layui-bg-zdy2" ondblclick="map.remove([cl1,cl2,cl3,cl4,cl5,cl6,cl7,cl8,cl9,cl10,cl11,cl12,cl13,cl14,cl15,cl16])" onclick="map.add([cl1,cl2,cl3,cl4,cl5,cl6,cl7,cl8,cl9,cl10,cl11,cl12,cl13,cl14,cl15,cl16])"  href="javascript:;"><center>客运总量散点图</center></a></dd>
+	  
+    </dl>
+  </li>
+  
+</ul>
+
+<div id="container"></div>
+
+<script type="text/ecmascript">//高德地图API
+
+function abc() {
+				var h = 0;
+				var names = document.getElementsByName("mm");
+				for (var x = 0; x < names.length; x++) {
+					if (names[x].checked) { //选中的全部加起来 
+						h = h + parseInt(names[x].value); //将选中的值解析出来 
+					}
+				}
+				var ck1=document.getElementById("c1");     var z1=document.getElementById("c1").value
+				var ck2=document.getElementById("c2");     var z2=document.getElementById("c2").value
+				var ck3=document.getElementById("c3");     var z3=document.getElementById("c3").value
+				var ck4=document.getElementById("c4");     var z4=document.getElementById("c4").value
+				var ck5=document.getElementById("c5");     var z5=document.getElementById("c5").value
+				var ck6=document.getElementById("c6");     var z6=document.getElementById("c6").value
+				var ck7=document.getElementById("c7");     var z7=document.getElementById("c7").value
+				var ck8=document.getElementById("c8");     var z8=document.getElementById("c8").value
+				var ck9=document.getElementById("c9");     var z9=document.getElementById("c9").value
+				
+				var qz1,qz2,qz3,qz4,qz5,qz6,qz7,qz8,qz9;
+				if(ck1.checked==true){ qz1=z1/h }     if(ck1.checked==false){ qz1=0 }
+				
+				if(ck2.checked==true){ qz2=z2/h }     if(ck2.checked==false){ qz2=0 }
+				
+				if(ck3.checked==true){ qz3=z3/h }     if(ck3.checked==false){ qz3=0 }
+				
+				if(ck4.checked==true){ qz4=z4/h }     if(ck4.checked==false){ qz4=0 }
+				
+				if(ck5.checked==true){ qz5=z5/h }     if(ck5.checked==false){ qz5=0 }
+				
+				if(ck6.checked==true){ qz6=z6/h }     if(ck6.checked==false){ qz6=0 }
+				
+				if(ck7.checked==true){ qz7=z7/h }     if(ck7.checked==false){ qz7=0 }
+				
+				if(ck8.checked==true){ qz8=z8/h }     if(ck8.checked==false){ qz8=0 }
+				
+				if(ck9.checked==true){ qz9=z9/h }     if(ck9.checked==false){ qz9=0 }
+				
+				var f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16;
+				
+				var jinan=[0.062304699,0.188787542,0.106244385,0.444803169,0.14314782,0.099188896,0.362866933,0.117922269,0.152802233];
+				var qindao=[0.058325863,0.256260521,0.051571603,0.555196831,0.212439346,0.126071161,0.068419934,0.120029247,0.19731171];
+				var zibo=[0,0,0.072685591,0,0.054438978,0.06495225,0.040384139,0.120781651,0.046095724];
+				var zaozhuang=[0,0,0.034919046,0,0.037361643,0.077818903,0.046920448,0.036562385,0.062986122];
+				var dongyin=[0.251497461,0.059875725,0.158838224,0,0.132560223,0.057657959,0.047657084,0.134130656,0.044538818];
+				var yantai=[0.076434738,0.24649127,0.031378021,0,0.055782703,0.065241603,0.042727033,0.071065963,0.09649094];
+				var weifang=[0.057874232,0.012525923,0.021930973,0,0.04301926,0.050722499,0.0304636,0.043371385,0.038236075];
+				var jining=[0.064694711,0.014002103,0.012257769,0,0.026667581,0.054073014,0.024045415,0.034847985,0.029485982];
+				var taian=[0,0,0.018187428,0,0.040865253,0.066720128,0.036427546,0.032184093,0.033108059];
+				var weihai=[0.191773935,0.116217654,0.060559322,0,0.0699791,0.086003658,0.094766042,0.081954498,0.123713949];
+				var rizhao=[0.185796822,0.060318986,0.152546782,0,0.05147628,0.104968843,0.115749231,0.034083358,0.094955456];
+				var linyi=[0.05129754,0.045520276,0.024298486,0,0.031197807,0.024966839,0.007956461,0.024345027,0.014140719];
+				var dezhou=[0,0,0.094477473,0,0.022744395,0.02147132,0.011856649,0.070434971,0.010039631];
+				var liaocheng=[0,0,0.031038712,0,0.022341191,0.031652907,0.014093648,0.031110441,0.014215186];
+				var binzhou=[0,0,0.09184993,0,0.038373992,0.043876293,0.042022821,0.029404881,0.028617398];
+				var heze=[0,0,0.037216254,0,0.017604429,0.024613726,0.013643016,0.01777119,0.013262];
+				
+				f1=1000*(jinan[0]*qz1+jinan[1]*qz2+jinan[2]*qz3+jinan[3]*qz4+jinan[4]*qz5+jinan[5]*qz6+jinan[6]*qz7+jinan[7]*qz8+jinan[8]*qz9);
+				f2=1000*(qindao[0]*qz1+qindao[1]*qz2+qindao[2]*qz3+qindao[3]*qz4+qindao[4]*qz5+qindao[5]*qz6+qindao[6]*qz7+qindao[7]*qz8+qindao[8]*qz9);
+				f3=1000*(zibo[0]*qz1+zibo[1]*qz2+zibo[2]*qz3+zibo[3]*qz4+zibo[4]*qz5+zibo[5]*qz6+zibo[6]*qz7+zibo[7]*qz8+zibo[8]*qz9);
+				f4=1000*(zaozhuang[0]*qz1+zaozhuang[1]*qz2+zaozhuang[2]*qz3+zaozhuang[3]*qz4+zaozhuang[4]*qz5+zaozhuang[5]*qz6+zaozhuang[6]*qz7+zaozhuang[7]*qz8+zaozhuang[8]*qz9);
+				f5=1000*(dongyin[0]*qz1+dongyin[1]*qz2+dongyin[2]*qz3+dongyin[3]*qz4+dongyin[4]*qz5+dongyin[5]*qz6+dongyin[6]*qz7+dongyin[7]*qz8+dongyin[8]*qz9);
+				f6=1000*(yantai[0]*qz1+yantai[1]*qz2+yantai[2]*qz3+yantai[3]*qz4+yantai[4]*qz5+yantai[5]*qz6+yantai[6]*qz7+yantai[7]*qz8+yantai[8]*qz9);
+				f7=1000*(weifang[0]*qz1+weifang[1]*qz2+weifang[2]*qz3+weifang[3]*qz4+weifang[4]*qz5+weifang[5]*qz6+weifang[6]*qz7+weifang[7]*qz8+weifang[8]*qz9);
+				f8=1000*(jining[0]*qz1+jining[1]*qz2+jining[2]*qz3+jining[3]*qz4+jining[4]*qz5+jining[5]*qz6+jining[6]*qz7+jining[7]*qz8+jining[8]*qz9);
+				f9=1000*(taian[0]*qz1+taian[1]*qz2+taian[2]*qz3+taian[3]*qz4+taian[4]*qz5+taian[5]*qz6+taian[6]*qz7+taian[7]*qz8+taian[8]*qz9);
+				f10=1000*(weihai[0]*qz1+weihai[1]*qz2+weihai[2]*qz3+weihai[3]*qz4+weihai[4]*qz5+weihai[5]*qz6+weihai[6]*qz7+weihai[7]*qz8+weihai[8]*qz9);
+				f11=1000*(rizhao[0]*qz1+rizhao[1]*qz2+rizhao[2]*qz3+rizhao[3]*qz4+rizhao[4]*qz5+rizhao[5]*qz6+rizhao[6]*qz7+rizhao[7]*qz8+rizhao[8]*qz9);
+				f12=1000*(linyi[0]*qz1+linyi[1]*qz2+linyi[2]*qz3+linyi[3]*qz4+linyi[4]*qz5+linyi[5]*qz6+linyi[6]*qz7+linyi[7]*qz8+linyi[8]*qz9);
+				f13=1000*(dezhou[0]*qz1+dezhou[1]*qz2+dezhou[2]*qz3+dezhou[3]*qz4+dezhou[4]*qz5+dezhou[5]*qz6+dezhou[6]*qz7+dezhou[7]*qz8+dezhou[8]*qz9);
+				f14=1000*(liaocheng[0]*qz1+liaocheng[1]*qz2+liaocheng[2]*qz3+liaocheng[3]*qz4+liaocheng[4]*qz5+liaocheng[5]*qz6+liaocheng[6]*qz7+liaocheng[7]*qz8+liaocheng[8]*qz9);
+				f15=1000*(binzhou[0]*qz1+binzhou[1]*qz2+binzhou[2]*qz3+binzhou[3]*qz4+binzhou[4]*qz5+binzhou[5]*qz6+binzhou[6]*qz7+binzhou[7]*qz8+binzhou[8]*qz9);
+				f16=1000*(heze[0]*qz1+heze[1]*qz2+heze[2]*qz3+heze[3]*qz4+heze[4]*qz5+heze[5]*qz6+heze[6]*qz7+heze[7]*qz8+heze[8]*qz9);
+				
+				var zf=f1+f2+f3+f4+f5+f6+f7+f8+f9+f10+f11+f12+f13+f14+f15+f16;
+				return [f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,zf]
+			}
+
+	        function allCheck(node1) {
+					var node = document.getElementsByName("mm");
+					for (var x = 0; x < node.length; x++) {
+						node[x].checked = node1.checked;
+					}
+				}		
+				
+			function chose(node) {
+				var flag = true; //用于遍历是否是全部变量设置 
+				var allM = document.getElementsByName("all")[0];
+				var node = document.getElementsByName("mm");
+				for (var x = 0; x < node.length; x++) {
+					if (node[x].checked == false) { //只要有一个没选中，就退出遍历，标记设置为false 
+						flag = false;
+						break;
+					}
+				}
+				if (flag) {
+					allM.checked = true;
+				} else {
+					allM.checked = false;
+				}
+			}
+        var a=start();	
+    	var districtData = [
+    	    {"count": a[0], "lnglat": "116.98509,36.67102"}, 
+			{"count": a[1], "lnglat": "120.30858,36.06324"},
+			{"count": a[2], "lnglat": "118.0509,36.7883"},
+			{"count": a[3], "lnglat": "117.30013,34.78187"},
+			{"count": a[4], "lnglat": "118.46644,37.45472"},
+			{"count": a[5], "lnglat": "121.37818,37.54678"},
+			{"count": a[6], "lnglat": "119.09244,36.69661"},
+			{"count": a[7], "lnglat": "116.59592,35.39295"},
+			{"count": a[8], "lnglat": "117.10471,36.18694"},
+			{"count": a[9], "lnglat": "122.13864,37.42598"},
+			{"count": a[10], "lnglat": "119.52705,35.40384"},
+			{"count": a[11], "lnglat": "118.33833,35.03686"},
+			{"count": a[12], "lnglat": "116.28266,37.44868"},
+			{"count": a[13], "lnglat": "115.93788,36.45717"},
+			{"count": a[14], "lnglat": "118.01215,37.45316"},
+			{"count": a[15], "lnglat": "115.50135,35.23101"},
+    	    ];
+		
+	   function start() {
+		var jk=abc();
+		var ss1=jk["f1"];  var ss2=jk["f2"];  var ss3=jk["f3"];  var ss4=jk["f4"];  var ss5=jk["f5"];
+		var ss6=jk["f6"];  var ss7=jk["f7"];  var ss8=jk["f8"];  var ss9=jk["f9"];  var ss10=jk["f10"];
+		var ss11=jk["f11"];var ss12=jk["f12"];var ss13=jk["f13"];var ss14=jk["f14"];
+		var ss15=jk["f15"];var ss16=jk["f16"]; var zh=jk['zf'];
+	    var g=[]
+	   for(var i=0;i<jk.length;i++)
+	   {
+		   g[i]=jk[i];
+		
+	    }		
+		return g;
+		
+	}
+	
+	function  jc()
+	{
+		res=abc();
+		
+		for(var i=0;i<res.length-1;i++)
+		{
+			districtData[i].count=res[i]
+		}
+	}
+	
+	var adCode = 370000;
+    var depth = 1;
+    var map = new AMap.Map("container", {
+        zoom: 8,
+        center: [117.66797,36.48137],
+        pitch: 0,
+		//features:['bg'],
+        viewMode: '3D',
+    });
+	
+	 //3D控制罗盘和鹰眼控件
+	 map.plugin(['AMap.ControlBar',"AMap.OverView"], function(){// 添加 3D 罗盘控制
+	       map.addControl(new AMap.ControlBar( ));
+		   var view = new AMap.OverView({isOpen:true});
+		   map.addControl(view);
+		   });
+		  
+	 //设置地图显示要素
+	    function setMapFeatures() {
+	      var features = [];
+	      var inputs = document.querySelectorAll("#map-features input");
+	      inputs.forEach(function(input) {
+	        if (input.checked) {
+	          features.push(input.value);
+	        }
+	      });
+	      map.setFeatures(features);
+	    }
+	    	
+	    //绑定checkbox点击事件
+	    var inputs = document.querySelectorAll("#map-features input");
+	    inputs.forEach(function(checkbox) {
+	      checkbox.onclick = setMapFeatures;
+	    });
+
+
+    // 创建省份图层
+    var disProvince;
+    function initPro(code, dep) {
+        dep = 1;
+        adCode = code;
+        depth = dep;
+
+        disProvince && disProvince.setMap(null);
+		// 颜色辅助方法
+		var colors = {};
+		
+        disProvince = new AMap.DistrictLayer.Province({
+            zIndex: 12,
+            adcode: [code],
+            depth: dep,
+			opacity : 1,     //设置透明度
+            styles: {
+                'fill': function (properties) {
+                    var adcode = properties.adcode;
+					colors[adcode] = 'rgba(0, 0, 0, 0)';       //使填充色为透明色
+                    return colors[adcode];
+                },
+                'city-stroke': 'black', // 中国地级市边界
+            }
+        });
+        disProvince.setMap(map);
+    }
+	
+	function addbj(){initPro(adCode, depth);}
+	
+	//创建热力图
+	var layerr ;
+	function tj() {
+		jc();
+		layerr= new Loca.HeatmapLayer({
+		    map: map,
+		});
+		//参数
+		layerr.setOptions({
+		    style: {
+		        radius: 120,
+		        color: {
+		            0.5: '#2c7bb6',
+		            0.65: '#abd9e9',
+		            0.7: '#ffffbf',
+		            0.9: '#fde468',
+		            1.0: '#d7191c'
+		        }
+		    }
+		});
+		
+		layerr.setData(districtData, {
+		    lnglat: 'lnglat',
+		    value: 'count'
+		});
+		layerr.render();	
+		var juzheng=abc();
+		console.log('济南：'+juzheng[0]);console.log('青岛: '+juzheng[1]);console.log('淄博: '+juzheng[2]);console.log('枣庄: '+juzheng[3]);
+		console.log('东营: '+juzheng[4]);console.log('烟台: '+juzheng[5]);console.log('潍坊: '+juzheng[6]);console.log('济宁: '+juzheng[7]);
+		console.log('泰安: '+juzheng[8]);console.log('威海: '+juzheng[9]);console.log('日照: '+juzheng[10]);console.log('临沂: '+juzheng[11]);
+		console.log('德州: '+juzheng[12]);console.log('聊城: '+juzheng[13]);console.log('滨州: '+juzheng[14]);console.log('菏泽: '+juzheng[15]);
+		map.add(layerr)} 
+		
+	function yc() {map.remove(layerr);}   //移除热力图
+	// function tj1() {
+	// 	jc();
+		
+	// 	//创建等值线图
+	// 	var contourLayer = new Loca.ContourLayer({
+	// 	    shape: 'isoline',
+	// 	    map: map
+	// 	});
+		
+	// 	contourLayer.setData(districtData, {
+	// 	    lnglat: 'lnglat',
+	// 	    value: 'count'
+	// 	});
+		
+	// 	contourLayer.setOptions({
+	// 	    smoothNumber: 3,
+	// 	    threshold: 3,
+	// 	    interpolation: {
+	// 	        step: 300,
+	// 	        effectRadius: 4500,
+	// 	    },
+	// 	    style: {
+	// 	        height: 5 * 1E4,
+	// 	        color: ["#0c2c84", "#225ea8", "#1d91c0", "#41b6c4", "#7fcdbb", "#c7e9b4", "#ffffcc"]
+	// 	    }
+	// 	});
+	// 	contourLayer.render();
+	// 	map.add(contourLayer);
+	// 	}
+	// function yc1() {map.remove(contourLayer);}
+</script>
+<script type="text/javascript" src="散点.js"></script>
+
+<script src="layui.js" charset="utf-8"></script>
+<script>
+layui.use('element', function(){
+  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+  //监听导航点击
+  element.on('nav(demo)', function(elem){
+    layer.msg(elem.text());
+  });
+});
+</script>
+</body>
+</html>
